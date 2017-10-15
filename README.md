@@ -52,7 +52,16 @@ Currently only supports model bagging.
 
 **Basic _KerasPipeline_ example:**
 
-Specify your basic CNN model:
+It consists of two basic steps:
+
+- Create your model/model zoo in different file, e.g. `cnn_models.py` in directory, from which you will be able to load them into your script/notebook
+- Define model & run parameters and run
+
+More detailed examples with full workflow in `examples/` directory.
+
+#### Step 1 - Define your model
+
+Specify your basic CNN model and save it into `cnn_models.py` file in the working directory:
 
 ```python
 def basic_cnn(params):
@@ -85,6 +94,10 @@ def basic_cnn(params):
     return model
 ```
 
+#### Step 2 - Define your parameters & run
+
+Then, in your script:
+
 Specify your model parameters:
 
 ```python
@@ -98,7 +111,7 @@ Set your run parameters:
 
 ```python
 bag_parameters = {
-    'model_name': getattr(cnn_models, 'basic_cnn'),
+    'model_name': getattr(cnn_models, 'basic_cnn'), # <- this loads basic_cnn model definition from cnn_models.py based on it's function name
     'model_params': model_parameters,
     'predict_test': True,
     'n_bags': 2,
