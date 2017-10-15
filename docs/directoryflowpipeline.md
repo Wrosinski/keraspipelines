@@ -69,11 +69,7 @@ Runs Keras bagged run with out-of-memory training with data augmentation.
 
 ### Arguments
 
-- split_every_bag: Boolean, whether to create random training/validation
-
-  ```
-      split every bag.
-  ```
+- split_every_bag: Boolean, whether to create random training/validation split every bag.
 
 ### Returns
 

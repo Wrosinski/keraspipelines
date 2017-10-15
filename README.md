@@ -24,7 +24,6 @@ When running KFold/StratifiedKFold _out-of-fold predictions_ for both train and 
 
 _KerasPipeline_ and _KerasFlowPipeline_ allow to run either **bagged** run or **KFold/StratifiedKFold** run. _KerasDirectoryFlowPipeline_ allows only a **bagged** run as of now. It would be possible to integrate KF into it but that will require a different approach for the data splitting part.
 
-
 ### _KerasPipeline_
 
 Basic pipeline, specify all the parameters, train a model with either bagging or KFold/StratifiedKFold, output model + predictions for validation & test datasets.
@@ -35,12 +34,11 @@ Similar to _KerasPipeline_ but with real-time data augmentation during model tra
 
 ### _KerasDirectoryFlowPipeline_
 
-A different pipeline, based on [_.flow_from_directory_](https://keras.io/preprocessing/image/) method which enables **out-of-memory** training, where data is loaded in batches from folders specified in the run parameters.
-Training & test data augmentation implemented.
+A different pipeline, based on [_.flow_from_directory_](https://keras.io/preprocessing/image/) method which enables **out-of-memory** training, where data is loaded in batches from folders specified in the run parameters. Training & test data augmentation implemented.
 
 Models should be saved into `checkpoints` in working directory during training in order to be loaded afterwards for test data prediction.
 
-A method is provided in the class definition which enables creation of random splits for every bag (with _seed_ parameter either set or not.) 
+A method is provided in the class definition which enables creation of random splits for every bag (with _seed_ parameter either set or not.)
 
 Currently only supports model bagging.
 
@@ -150,3 +148,13 @@ bagging_model, bagging_preds_valid, bagging_preds_test = bag_pipeline.bag_run(
 ```
 
 This will output a trained model, predictions for validation & test set.
+
+## Installation
+
+`git clone https://github.com/Wrosinski/keraspipelines`
+
+Go into `keraspipelines` directory with `cd keraspipelines` and run:
+
+`python setup.py install`
+
+Sometimes adding `sudo` prefix may be needed.
