@@ -1,14 +1,14 @@
 import gc
+import glob
 import os
+import shutil
 import time
 
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-from keras.callbacks import (CSVLogger, EarlyStopping, ModelCheckpoint,
-                             ReduceLROnPlateau)
+from keras.callbacks import ModelCheckpoint
 from keras.models import load_model
-from keras.utils import to_categorical
 from sklearn.model_selection import KFold, StratifiedKFold, train_test_split
 
 

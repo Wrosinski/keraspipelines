@@ -22,5 +22,5 @@ setup(name='Keras Pipelines',
           'Topic :: Software Development :: Libraries',
           'Topic :: Software Development :: Libraries :: Python Modules'
       ],
-      keywords='deeplearning machinelearning keras tensorflow pipeline'
+      keywords='deeplearning machinelearning keras tensorflow pipeline',
       packages=find_packages())

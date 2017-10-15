@@ -7,11 +7,12 @@ import time
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-import utils
 from keras.callbacks import (CSVLogger, EarlyStopping, ModelCheckpoint,
                              ReduceLROnPlateau)
 from keras.models import load_model
 from sklearn.model_selection import KFold, StratifiedKFold, train_test_split
+
+from .utils import copytree
 
 
 class KerasDirectoryFlowPipeline(object):
@@ -186,7 +187,7 @@ class KerasDirectoryFlowPipeline(object):
         shutil.rmtree(self.valid_dir)
         os.makedirs(self.train_dir, exist_ok=True)
         os.makedirs(self.valid_dir, exist_ok=True)
-        utils.copytree(self.full_train_dir, self.train_dir)
+        copytree(self.full_train_dir, self.train_dir)
         os.chdir(self.train_dir)
 
         for _class in glob.glob('*'):

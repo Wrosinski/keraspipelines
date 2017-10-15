@@ -7,9 +7,7 @@ import time
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-import utils
-from keras.callbacks import (CSVLogger, EarlyStopping, ModelCheckpoint,
-                             ReduceLROnPlateau)
+from keras.callbacks import ModelCheckpoint
 from keras.models import load_model
 from sklearn.model_selection import KFold, StratifiedKFold, train_test_split
 

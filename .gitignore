@@ -1,4 +1,8 @@
 *.DS_Store
 *.pyc
 .directory
-/dist/*
+dist/*
+build/*
+temp/*
+examples/checkpoints/*
+Keras_Pipelines.egg-info
