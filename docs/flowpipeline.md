@@ -1,7 +1,7 @@
-# KerasPipeline
+# KerasFlowPipeline
 
 ```python
-keraspipelines.keras_pipeline.KerasPipeline(
+keraspipelines.keras_pipeline.KerasFlowPipeline(
                model_name, model_params=None,
                predict_test=False,
                n_bags=2, n_folds=5, split_size=0.2,
@@ -11,10 +11,12 @@ keraspipelines.keras_pipeline.KerasPipeline(
                number_epochs=1, batch_size=1, callbacks=None,
                run_save_name=None, save_statistics=False, save_model=False,
                output_statistics=True,
-               src_dir=None)
+               src_dir=None,
+               train_datagen=None, valid_datagen=None, test_datagen=None,
+               number_test_augmentations=0)
 ```
 
-Creates standard Keras pipeline.
+Creates Keras pipeline with .flow method for data augmentation.
 
 ## Arguments
 
@@ -37,18 +39,22 @@ Creates standard Keras pipeline.
 - save_model: Boolean, whether to save model checkpoints, by default in src_dir + 'checkpoints/'.
 - output_statistics: Boolean, whether to show run statistics.
 - src_dir: String, working directory for model training & default checkpoints location.
+- train_datagen: ImageDataGenerator object specifying data augmentation parameters for training set.
+- valid_datagen: ImageDataGenerator object specifying data augmentation parameters for validation set.
+- test_datagen: ImageDataGenerator object specifying data augmentation parameters for training set.
+- number_test_augmentations: Int, number of data augmentations to perform during test data prediction.
 
 --------------------------------------------------------------------------------
 
-## bag_run
+## bag_flow_run
 
 ```python
-bag_run(X_train, y_train,
-        X_valid=None, y_valid=None,
-        X_test=None, y_test=None)
+bag_flow_run(X_train, y_train,
+             X_valid=None, y_valid=None,
+             X_test=None, y_test=None)
 ```
 
-Runs bagging using standard Keras pipeline.
+Runs bagging using Keras pipeline with data augmentation.
 
 ### Arguments
 
@@ -66,11 +72,11 @@ Runs bagging using standard Keras pipeline.
 
 --------------------------------------------------------------------------------
 
-## kfold_run
+## kf_flow_run
 
 ```python
-kfold_run(X_train, y_train,
-          X_test=None, y_test=None)
+kf_flow_run(X_train, y_train,
+            X_test=None, y_test=None)
 ```
 
 ### Arguments
@@ -85,3 +91,20 @@ kfold_run(X_train, y_train,
 - When predict_set: 3 objects: a trained model, out-of-fold training predictions, out-of-fold test predictions
 
 - When predict_set == False: 2 objects: a trained model, out-of-fold training predictions
+
+## predict_test_augment
+
+```python
+predict_test_augment(X_test, model)
+```
+
+Runs Keras bagged model test data prediction with data augmentation.
+
+### Arguments
+
+- X_test: test dataset
+- model: trained model
+
+### Returns
+
+Test data predictions

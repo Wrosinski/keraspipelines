@@ -46,13 +46,13 @@ bag_parameters = {
     'verbose': True,
     'number_epochs': 1,
     'batch_size': 256,
-    'callbacks': model_callbacks,
+    #'callbacks': model_callbacks,
 
     'src_dir': os.getcwd(),
 
     'run_save_name': 'basic_cnn_cifar_bagging',
     'save_history': True,
-    'save_model': True,
+    #'save_model': True,
     'output_statistics': True,
 
     'X_train': x_train,
@@ -97,10 +97,10 @@ bag_pipeline = KerasPipeline(model_name=bag_parameters['model_name'],
                              batch_size=bag_parameters['batch_size'],
                              seed=bag_parameters['seed'],
                              user_split=bag_parameters['user_split'],
-                             callbacks=bag_parameters['callbacks'],
+                             # callbacks=bag_parameters['callbacks'],
                              run_save_name=bag_parameters['run_save_name'],
                              save_history=bag_parameters['save_history'],
-                             save_model=bag_parameters['save_model'],
+                             # save_model=bag_parameters['save_model'],
                              output_statistics=bag_parameters['output_statistics'])
 
 kfold_pipeline = KerasPipeline(model_name=kf_parameters['model_name'],

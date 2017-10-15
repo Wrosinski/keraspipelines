@@ -18,11 +18,9 @@ number_classes = 10
 y_train = to_categorical(y_train, number_classes)
 y_test = to_categorical(y_test, number_classes)
 
-# Transform data into floats & divide by 255
+# Transform data into floats
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
-x_train /= 255
-x_test /= 255
 
 
 # Define model callbacks and parameters passed directly to the model definition
@@ -70,7 +68,7 @@ flow_bag_parameters = {
     'test_datagen': train_datagen,
     'number_test_augmentations': 5,
 
-    'run_save_name': 'resnet50_flow_cifar_bagging',
+    'run_save_name': 'basic_cnn_flow_cifar_bagging',
     'save_history': True,
     'save_model': True,
     'output_statistics': True,
@@ -101,7 +99,7 @@ flow_kf_parameters = {
     'test_datagen': train_datagen,
     'number_test_augmentations': 5,
 
-    'run_save_name': 'resnet50_flow_cifar_kfold',
+    'run_save_name': 'basic_cnn_flow_cifar_kfold',
     'save_history': True,
     'save_model': True,
     'output_statistics': True,
