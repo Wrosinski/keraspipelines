@@ -171,3 +171,8 @@ Go into `keraspipelines` directory with `cd keraspipelines` and run:
 `python setup.py install`
 
 Sometimes adding `sudo` prefix may be needed.
+
+
+### Reference
+
+Library based on [Keras](https://github.com/fchollet/keras).
