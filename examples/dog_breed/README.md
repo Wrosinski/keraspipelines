@@ -12,8 +12,7 @@ I decided to clean my code up and create a more reusable framework for Keras mod
 
 I will provide an example of usage based on Kaggle's [Dog Breed Identification](https://www.kaggle.com/c/dog-breed-identification) playground challenge.
 
-Start with downloading the data, extract it and put in a chosen folder.
-I put my scripts in `/scripts` and data in `/input`.
+Start with downloading the data, extract it and put in a chosen folder. I put my scripts in `/scripts` and data in `/input`.
 
 To begin with, I'll define my models in `dogs_cnn_models.py` in `/scripts` directory in order to be able to call them for the pipeline.
 
@@ -47,9 +46,7 @@ def resnet_dense(params):
     return Resnet_model
 ```
 
-
-Now, let's start with the proper script, in which we will create a `KerasFlowPipeline` object and use it to train our ResNet defined in `dogs_cnn_models.py`.
-We will call the script `dogs_training_script.py`.
+Now, let's start with the proper script, in which we will create a `KerasFlowPipeline` object and use it to train our ResNet defined in `dogs_cnn_models.py`. We will call the script `dogs_training_script.py`.
 
 1. First step, load the needed libraries:
 
@@ -66,7 +63,7 @@ from scipy import misc
 from tqdm import tqdm
 ```
 
-2. Let's define functions to load data:
+1. Let's define functions to load data:
 
 ```python
 def load_image(path, img_size):
@@ -93,17 +90,16 @@ def load_data(src, df, img_size, labels=None):
         return X
 ```
 
-3. Now we will specify basic parameters, directories to load data from and desired size of images to be provided into our model.
+1. Now we will specify basic parameters, directories to load data from and desired size of images to be provided into our model.
 
 ```python
 src_dir = '../input/'
 src_train = src_dir + 'train/'
 src_test = src_dir + 'test/'
 image_size = (224, 224)
-
 ```
 
-4. Let's read source files to get ID's and labels, which will enable us to load the images.
+1. Let's read source files to get ID's and labels, which will enable us to load the images.
 
 Labels should be One-Hot encoded in order to be fed into the model.
 
@@ -125,8 +121,7 @@ print('Training data shape:', X_train.shape)
 print('Test data shape:', X_test.shape)
 ```
 
-
-5. Now, we will prepare model parameters dictionary, callbacks and parameters for data augmentation. All of those will enable us to create a `KerasFlowPipeline` object forming a pipeline with all our defined parameters based on a dictionary.
+1. Now, we will prepare model parameters dictionary, callbacks and parameters for data augmentation. All of those will enable us to create a `KerasFlowPipeline` object forming a pipeline with all our defined parameters based on a dictionary.
 
 ```python
 model_callbacks = [EarlyStopping(monitor='val_loss', patience=5, verbose=1),
@@ -180,10 +175,9 @@ flow_kf_parameters = {
     'y_train': y_train,
     'X_test': X_test,
 }
-
 ```
 
-6. Let's now feed the object with defined parameters and run it!
+1. Let's now feed the object with defined parameters and run it!
 
 ```python
 flow_kfold_pipeline = KerasFlowPipeline(model_name=flow_kf_parameters['model_name'],
@@ -215,11 +209,9 @@ kf_model, oof_train, oof_test = flow_kfold_pipeline.kf_flow_run(
     X_test=flow_kf_parameters['X_test'])
 ```
 
-
 This will output model from the last fold and out-of-fold predictions for train & test.
 
-Additionally we can save the predictions into pickle files, so we can later load them and combine, if we would like to stack or blend predictions from our models.
-Let's also output a submission:
+Additionally we can save the predictions into pickle files, so we can later load them and combine, if we would like to stack or blend predictions from our models. Let's also output a submission:
 
 ```python
 pd.to_pickle(oof_train, 'OOF_train_resnet_dense_5fold_SKF_run1.pkl')
