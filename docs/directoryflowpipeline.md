@@ -85,11 +85,6 @@ predict_test_augment()
 
 Runs Keras bagged model test data prediction with data augmentation.
 
-### Arguments
-
-- X_test: test dataset
-- model: trained model
-
 ### Returns
 
 2 objects: test data predictions, test filenames
