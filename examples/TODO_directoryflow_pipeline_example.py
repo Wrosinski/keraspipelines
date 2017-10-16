@@ -84,7 +84,7 @@ directoryflow_bag_parameters = {
     'number_test_augmentations': 5,
 
     'run_save_name': 'basic_cnn_bag_directoryflow',
-    'save_history': True,
+    'save_statistics': True,
     'save_model': True,
     'output_statistics': True,
 }
@@ -122,7 +122,7 @@ bag_pipeline = KerasDirectoryFlowPipeline(model_name=directoryflow_bag_parameter
                                               'number_test_augmentations'],
 
                                           run_save_name=directoryflow_bag_parameters['run_save_name'],
-                                          save_history=directoryflow_bag_parameters['save_history'],
+                                          save_statistics=directoryflow_bag_parameters['save_statistics'],
                                           save_model=directoryflow_bag_parameters['save_model'],
                                           output_statistics=directoryflow_bag_parameters['output_statistics'])
 

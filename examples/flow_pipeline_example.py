@@ -69,7 +69,7 @@ flow_bag_parameters = {
     'number_test_augmentations': 5,
 
     'run_save_name': 'basic_cnn_flow_cifar_bagging',
-    'save_history': True,
+    'save_statistics': True,
     'save_model': True,
     'output_statistics': True,
 
@@ -100,7 +100,7 @@ flow_kf_parameters = {
     'number_test_augmentations': 5,
 
     'run_save_name': 'basic_cnn_flow_cifar_kfold',
-    'save_history': True,
+    'save_statistics': True,
     'save_model': True,
     'output_statistics': True,
 
@@ -129,7 +129,7 @@ flow_bag_pipeline = KerasFlowPipeline(model_name=flow_bag_parameters['model_name
                                           'number_test_augmentations'],
 
                                       run_save_name=flow_bag_parameters['run_save_name'],
-                                      save_history=flow_bag_parameters['save_history'],
+                                      save_statistics=flow_bag_parameters['save_statistics'],
                                       save_model=flow_bag_parameters['save_model'],
                                       output_statistics=flow_bag_parameters['output_statistics'])
 
@@ -152,7 +152,7 @@ flow_kfold_pipeline = KerasFlowPipeline(model_name=flow_kf_parameters['model_nam
                                             'number_test_augmentations'],
 
                                         run_save_name=flow_kf_parameters['run_save_name'],
-                                        save_history=flow_kf_parameters['save_history'],
+                                        save_statistics=flow_kf_parameters['save_statistics'],
                                         save_model=flow_kf_parameters['save_model'],
                                         output_statistics=flow_kf_parameters['output_statistics'])
 

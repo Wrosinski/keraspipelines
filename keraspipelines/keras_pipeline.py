@@ -231,6 +231,10 @@ class KerasPipeline(object):
                                                                                  self.i),
                                                       monitor='val_loss',
                                                       verbose=0, save_best_only=True))
+            if self.save_model_history:
+                self.callbacks.append(CSVLogger('{}{}/{}_bag{}_history.csv'.format(self.checkpoints_dst,
+                                                                                   self.run_save_name, self.run_save_name,
+                                                                                   self.i), append=True))
 
             history = model.fit(X_tr, y_tr, verbose=self.verbose,
                                 batch_size=self.batch_size, epochs=self.number_epochs,
