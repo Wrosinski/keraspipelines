@@ -10,7 +10,7 @@ setup(name='Keras Pipelines',
       install_requires=['numpy>=1.9.1',
                         'pandas>=0.20.0',
                         'tensorflow>=1.3.0',
-                        'keras>=2.0.5',
+                        'keras>=2.0.8',
                         'scikit-learn>=0.19.0'],
       classifiers=[
           'Development Status :: 5 - Production/Stable',

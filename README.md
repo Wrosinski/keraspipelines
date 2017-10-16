@@ -2,6 +2,8 @@
 
 ## Idea
 
+--------------------------------------------------------------------------------
+
 'Keras is a high-level neural networks API' according to it's description. It is a great tool which can make Deep Learning a really pleasant experience. It enables user to choose from a whole set of parameters in every step, ranging from model definition to model training and prediction.
 
 For some it is a great merit but for others it may seem hard to be able to combine all the steps into a functioning whole.
@@ -10,9 +12,21 @@ There are also situations where we would like to check many models quickly or se
 
 **Keras Pipelines** come to rescue in both situations! They allow experienced users to perform rapid experimentation and easy change of parameters in one place with just a few easy steps or to even adjust the pipelines themselves. For people who start their journey into Deep Learning, **Pipelines** should provide an easy interface to _define, train and predict_ with their models.
 
+### Limitations
+
+When creating this kind of wrapper, already over a high-level API, there had to be many compromises made. Current form is far from perfect, I tried to find a compromise between ease of use and pipeline manipulation possibilities.
+
+For example, due to OOF_train and OOF_test shapes assumptions, KFold currently works for regression and classification out-of-the-box but those shapes can easily be changed to work with different problems, when arrays should be output (like segmentation). In a similar way, you are not able to provide your own data generator, unless you change that in the source code. In most cases using built-in Keras generators should be fine and that was my aim, to cover most of the cases without sacrificing a significant part of simplicity.
+
+### Disclaimer
+
+The project evolved from an idea of simply structuring my own pipelines to achieve a quite clean and reusable form. Then I thought it should be easier for many of you to simply install it as a package, so this is the way I release it but if you simply copy the `.py` **Pipelines** scripts, they should work without a problem too. Only _KerasDirectoryFlowPipeline_ makes use of one of the `utils.py` functions.
+
 ## Structure
 
-Three pipelines are provided.
+--------------------------------------------------------------------------------
+
+Three pipelines are provided. _KerasPipeline_ is intended for work with MLP's and CNN's, whereas _KerasFlowPipeline_ and _KerasDirectoryFlowPipeline_ for Convolutional nets due to image augmentation methods incorporated.
 
 All of them enable user to specify run parameters such as _model definition_, _model parameters_, _number of bags/folds_, _validation split size_, _stratification_ in case of KFold. Validation split can be either created as a subset of training set or provided by user.
 
@@ -43,6 +57,8 @@ A method is provided in the class definition which enables creation of random sp
 Currently only supports model bagging.
 
 ## Usage
+
+--------------------------------------------------------------------------------
 
 ### Important!
 
@@ -164,15 +180,20 @@ This will output a trained model, predictions for validation & test set.
 
 ## Installation
 
+--------------------------------------------------------------------------------
+
 `git clone https://github.com/Wrosinski/keraspipelines`
 
-Go into `keraspipelines` directory with `cd keraspipelines` and run:
+Go into **keraspipelines** directory with `cd keraspipelines`
+
+and run:
 
 `python setup.py install`
 
 Sometimes adding `sudo` prefix may be needed.
 
-
 ### Reference
 
-Library based on [Keras](https://github.com/fchollet/keras).
+--------------------------------------------------------------------------------
+
+Library based on [Keras](https://github.com/fchollet/keras) by Francois Chollet.
