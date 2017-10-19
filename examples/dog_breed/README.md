@@ -49,7 +49,7 @@ def resnet_dense(params):
     return Resnet_model
 ```
 
-Now, let's start with the proper script, in which we will create a `KerasFlowPipeline` object and use it to train our ResNet defined in `dogs_cnn_models.py`. We will call the script `dogs_training_script.py`.
+Now, let's start with the proper script, in which we will create a `KerasPipeline` object and use it to train our ResNet defined in `dogs_cnn_models.py`. We will call the script `dogs_training_script.py`.
 
 1. First step, load the needed libraries:
 
