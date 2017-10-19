@@ -14,7 +14,17 @@ For out-of-memory training using `.flow_from_directory` look below, at **KerasPi
 
 Let's start with loading needed libraries and load the KerasPipeline object among them:
 
-`from keraspipelines import KerasPipeline`
+```python
+import glob
+import os
+import cnn_models
+import keras
+from keras.callbacks import EarlyStopping
+from keras.datasets import cifar10
+from keras.preprocessing.image import ImageDataGenerator
+from keras.utils import to_categorical
+from keraspipelines import KerasPipeline
+```
 
 Now let's define our run parameters, whether we will use bagging or KFold, will data augmentation be used or maybe if we prefer to just predict with our trained model.
 

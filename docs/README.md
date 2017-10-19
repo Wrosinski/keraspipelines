@@ -1,4 +1,6 @@
-# KerasPipeline Documentation
+# Documentation
+
+## KerasPipeline
 
 ```python
 keraspipelines.KerasPipeline(
@@ -31,12 +33,11 @@ keraspipelines.KerasPipeline(
     number_validation_samples=0,
     number_test_samples=0,
 )
-
 ```
 
 Creates and defines KerasPipeline object. Enables in-memory and out-of-memory model training using bagging and KFold/StratifiedKFold.
 
-#### Arguments
+### Arguments
 
 - model_name: (String) Name of model based on .py file with models definitions.
 - predict_test: (Boolean), whether to predict on test set.
@@ -47,12 +48,15 @@ Creates and defines KerasPipeline object. Enables in-memory and out-of-memory mo
 - seed: (Int), random seed number for splits.
 
 - shuffle: (Boolean), whether to shuffle data during training & data split.
+
 - verbose: (Boolean,) whether to print information about the run.
 
 - run_save_name: (String), name of run used during checkpoint & run statistics saving.
 
 - load_keras_model: (Boolean), whether to load already trained model.
+
 - save_model: (Boolean), whether to save model checkpoints, by default in src_dir + 'checkpoints/'.
+
 - save_history: (Boolean), whether to save history of a model in CSV file.
 - save_statistics: (Boolean), whether to save run statistics.
 - output_statistics: (Boolean), whether to show run statistics.
@@ -82,6 +86,8 @@ Creates and defines KerasPipeline object. Enables in-memory and out-of-memory mo
 - number_test_samples: (Int), number of samples in test set, given to Keras generator
 
 --------------------------------------------------------------------------------
+
+### KerasPipeline.bag_run
 
 ```python
 keraspipelines.KerasPipeline.bag_run(
@@ -121,7 +127,11 @@ Bagging run.
 
 if predict_test additionally:
 
- - predictions_test: (numpy array), array for test set predictions.
+- predictions_test: (numpy array), array for test set predictions.
+
+--------------------------------------------------------------------------------
+
+### KerasPipeline.kfold_run
 
 ```python
 keraspipelines.KerasPipeline.kfold_run(
@@ -133,7 +143,6 @@ keraspipelines.KerasPipeline.kfold_run(
     index_number=None,
     flow_augment=False,
 )
-
 ```
 
 KFold/StratifiedKFold run.
@@ -157,7 +166,11 @@ KFold/StratifiedKFold run.
 
 if predict_test additionally:
 
- - oof_test: (numpy array), array with out-of-fold test set predictions.
+- oof_test: (numpy array), array with out-of-fold test set predictions.
+
+--------------------------------------------------------------------------------
+
+### KerasPipeline.directory_bag_flow_run
 
 ```python
 keraspipelines.KerasPipeline.directory_bag_flow_run(
@@ -166,7 +179,6 @@ keraspipelines.KerasPipeline.directory_bag_flow_run(
     split_size=0.2,
     split_every_bag=False,
     index_number=None)
-
 ```
 
 Bagging run using .flow_from_directory for loading data from directly from disk.
@@ -184,10 +196,13 @@ Bagging run using .flow_from_directory for loading data from directly from disk.
 - model: (Keras model), trained model for last bag.
 
 if predict_test additionally:
+
 - predictions_test: (numpy array), array for test set predictions.
 - test_image_names: (List), list with test filenames.
 
 --------------------------------------------------------------------------------
+
+### KerasPipeline.flow_predict_test_augment
 
 ```python
 keraspipelines.KerasPipeline.flow_predict_test_augment(
@@ -204,7 +219,11 @@ Runs Keras bagged model test data prediction with data augmentation.
 
 #### Returns
 
- - predictions_test: (numpy array), test data predictions
+- predictions_test: (numpy array), test data predictions
+
+--------------------------------------------------------------------------------
+
+### KerasPipeline.directory_predict_test_augment
 
 ```python
 keraspipelines.KerasPipeline.directory_predict_test_augment(
@@ -228,17 +247,21 @@ Runs Keras bagged model test data prediction with data augmentation using .flow_
 
 ## Helper functions
 
+### KerasPipeline.perform_random_validation_split
+
 ```python
 keraspipelines.KerasPipeline.perform_random_validation_split(split_size)
 ```
 
 Performs random split into training and validation sets when loading data from directories.
 
-#### Arguments
+### Arguments
 
 - split_size: (float), size of validation set in percents
 
 --------------------------------------------------------------------------------
+
+### KerasPipeline.output_run_statistics
 
 ```python
 keraspipelines.KerasPipeline.output_run_statistics(prefix)
@@ -246,11 +269,13 @@ keraspipelines.KerasPipeline.output_run_statistics(prefix)
 
 Saves statistics for each best epoch in bag/fold in current run.
 
-#### Arguments
+### Arguments
 
 - prefix: (String), specifies prefix for filename - 'bag', 'bag_dir', 'fold'
 
 --------------------------------------------------------------------------------
+
+### KerasPipeline.load_trained_model
 
 ```python
 keraspipelines.KerasPipeline.load_trained_model(prefix)
@@ -258,15 +283,17 @@ keraspipelines.KerasPipeline.load_trained_model(prefix)
 
 Loads trained model based on it's checkpoint.
 
-#### Arguments
+### Arguments
 
 - prefix: (String), specifies prefix for filename - 'bag', 'bag_dir', 'fold'
 
-#### Returns
+### Returns
 
 - model: (Keras model), loaded trained keras model
 
 --------------------------------------------------------------------------------
+
+### KerasPipeline.callbacks_append_checkpoint
 
 ```python
 keraspipelines.KerasPipeline.callbacks_append_checkpoint(prefix)
@@ -274,11 +301,13 @@ keraspipelines.KerasPipeline.callbacks_append_checkpoint(prefix)
 
 Appends checkpoint saving to model callbacks.
 
-#### Arguments
+### Arguments
 
- - prefix: (String), specifies prefix for filename - 'bag', 'bag_dir', 'fold'
+- prefix: (String), specifies prefix for filename - 'bag', 'bag_dir', 'fold'
 
 --------------------------------------------------------------------------------
+
+### KerasPipeline.callbacks_append_logger
 
 ```python
 keraspipelines.KerasPipeline.callbacks_append_logger(prefix)
@@ -286,11 +315,13 @@ keraspipelines.KerasPipeline.callbacks_append_logger(prefix)
 
 Appends CSV logging to model callbacks.
 
-#### Arguments
+### Arguments
 
- - prefix: (String), specifies prefix for filename - 'bag', 'bag_dir', 'fold'
+- prefix: (String), specifies prefix for filename - 'bag', 'bag_dir', 'fold'
 
 --------------------------------------------------------------------------------
+
+### KerasPipeline.callbacks_append_tensorboard - Not working
 
 ```python
 keraspipelines.KerasPipeline.callbacks_append_tensorboard(prefix)
@@ -298,6 +329,6 @@ keraspipelines.KerasPipeline.callbacks_append_tensorboard(prefix)
 
 Appends Tensorboard logging. Currently not working due to a Keras bug.
 
-#### Arguments
+### Arguments
 
- - prefix: (String), specifies prefix for filename - 'bag', 'bag_dir', 'fold'
+- prefix: (String), specifies prefix for filename - 'bag', 'bag_dir', 'fold'

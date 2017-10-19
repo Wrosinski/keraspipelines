@@ -8,13 +8,12 @@ So far, the library of my choice was Keras, as for 95% examples, especially when
 
 I decided to clean my code up and create a more reusable framework for Keras models. During this process, I thought that some of people who are already working with Keras but did not have time to establish a pipeline for themselves may benefit from publishing those pipelines. Some may find them ready to use as they are, others will adjust them to their liking.
 
+- [**Official Detailed Example**](https://github.com/Wrosinski/keraspipelines/tree/master/examples)
+- [**Documentation**](https://github.com/Wrosinski/keraspipelines/tree/master/docs)
+
 ## Example usage
 
 I will provide an example of usage based on Kaggle's [Dog Breed Identification](https://www.kaggle.com/c/dog-breed-identification) playground challenge.
-
-
-- [**Detailed Example**](https://github.com/Wrosinski/keraspipelines/tree/master/examples)
-- [**Documentation**](https://github.com/Wrosinski/keraspipelines/tree/master/docs)
 
 Start with downloading the data, extract it and put in a chosen folder. I put my scripts in `/scripts` and data in `/input`.
 
