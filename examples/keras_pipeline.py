@@ -10,8 +10,7 @@ import tensorflow as tf
 from keras.callbacks import CSVLogger, ModelCheckpoint, TensorBoard
 from keras.models import load_model
 from sklearn.model_selection import KFold, StratifiedKFold, train_test_split
-
-from .utils import copytree
+from utils import copytree
 
 
 class KerasPipeline(object):
@@ -298,7 +297,7 @@ class KerasPipeline(object):
             X_test: (numpy array), test set.
             y_test: (numpy array), test set labels.
             model_params: (Dict), dictionary of model parameters.
-            n_folds: (Int), number of folds used in training.
+            n_bags: (Int), number of bags used in training.
             stratify: (Boolean), whether fold split should be stratified according to labels distribution.
             index_number: (Int), index specifying from which bag should training or prediction be started.
             flow_augment: (Boolean), whether to use data augmentation during test and prediction.
@@ -492,7 +491,7 @@ class KerasPipeline(object):
 
         if self.predict_test:
             self.predictions_test, test_image_names = self.directory_predict_test_augment(
-                n_bags, index_number)
+                n_bags)
             return model, self.predictions_test, test_image_names
         return model
 
@@ -526,13 +525,12 @@ class KerasPipeline(object):
         print('Predictions on test data with augmentation done.')
         return predictions_test
 
-    def directory_predict_test_augment(self, n_bags, index_number=None):
+    def directory_predict_test_augment(self, n_bags):
         """Runs Keras bagged model test data prediction with data augmentation
             using .flow_from_directory method.
 
         # Arguments
             n_bags: (int), number of bags to predict on
-            index_number: (Int), index specifying from which bag should training or prediction be started.
 
         # Returns
             predictions_test: (numpy array) test data predictions.
@@ -541,11 +539,7 @@ class KerasPipeline(object):
 
         print('Predicting set from directory: {}'.format(self.test_dir))
         predictions_test_bags = []
-
-        if index_number is not None:
-            self.i = index_number
-        else:
-            self.i = 1
+        self.i = 1
 
         for bag in range(n_bags):
             print('Predicting crops for bag: {}'.format(bag + 1))
@@ -574,15 +568,12 @@ class KerasPipeline(object):
                 predictions_test /= self.number_test_augmentations
                 predictions_test_bags.append(predictions_test)
 
-            self.i += 1
-
         self.predictions_test = np.array(predictions_test_bags).mean(axis=0)
         print('Predictions on test data with augmentation done.')
         return self.predictions_test, test_image_names
 
     def perform_random_validation_split(self, split_size):
-        """Performs random split into training and validation sets when
-            loading data from directories.
+        """Performs random split into training and validation sets.
 
         # Arguments
             split_size: (float), size of validation set in percents
@@ -615,11 +606,6 @@ class KerasPipeline(object):
         return
 
     def output_run_statistics(self, prefix):
-        """Saves statistics for each best epoch in bag/fold in current run.
-
-        # Arguments
-            - prefix: (String), specifies prefix for filename - 'bag', 'bag_dir', 'fold'
-        """
 
         if self.verbose:
             print('Loss statistics for best epoch in current run: \n',
@@ -645,15 +631,6 @@ class KerasPipeline(object):
         return
 
     def load_trained_model(self, prefix):
-        """Loads trained model based on it's checkpoint.
-
-        # Arguments
-            - prefix: (String), specifies prefix for filename - 'bag', 'bag_dir', 'fold'
-
-        # Returns
-            - model: (Keras model), loaded trained keras model
-        """
-
         print('Loading already trained model: {} from {} number {} \n'.format(
             self.run_save_name, prefix, self.i))
 
@@ -664,12 +641,6 @@ class KerasPipeline(object):
         return model
 
     def callbacks_append_checkpoint(self, prefix):
-        """Appends checkpoint saving to model callbacks.
-
-        # Arguments
-            - prefix: (String), specifies prefix for filename - 'bag', 'bag_dir', 'fold'
-        """
-
         print('Saving model from current run: {}, {} number {} \n'.format(
             self.run_save_name, prefix, self.i))
 
@@ -683,12 +654,6 @@ class KerasPipeline(object):
         return
 
     def callbacks_append_logger(self, prefix):
-        """Appends CSV logging to model callbacks.
-
-        # Arguments
-            - prefix: (String), specifies prefix for filename - 'bag', 'bag_dir', 'fold'
-        """
-
         print('Saving CSV logs for model from current run: {}, {} number {} \n'.format(
             self.run_save_name, prefix, self.i))
 
@@ -701,12 +666,6 @@ class KerasPipeline(object):
         return
 
     def callbacks_append_tensorboard(self, prefix):
-        """Appends Tensorboard logging. Currently not working due to a Keras bug.
-
-        # Arguments
-            - prefix: (String), specifies prefix for filename - 'bag', 'bag_dir', 'fold'
-        """
-
         print('Saving Tensorboard for model from current run: {}, {} number {} \n'.format(
             self.run_save_name, prefix, self.i))
 

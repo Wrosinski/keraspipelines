@@ -1,4 +1,4 @@
-# Keras Pipelines
+# Keras Pipelines - 0.1.1
 
 ## Idea
 
@@ -20,15 +20,15 @@ For example, due to OOF_train and OOF_test shapes assumptions, KFold currently w
 
 ### Disclaimer
 
-The project evolved from an idea of simply structuring my own pipelines to achieve a quite clean and reusable form. Then I thought it should be easier for many of you to simply install it as a package, so this is the way I release it but if you simply copy the `.py` **Pipelines** scripts, they should work without a problem too. Only _KerasDirectoryFlowPipeline_ makes use of one of the `utils.py` functions.
+The project evolved from an idea of simply structuring my own pipelines to achieve a quite clean and reusable form. Then I thought it should be easier for many of you to simply install it as a package, so this is the way I release it but if you simply copy the `.py` **Pipelines** scripts, they should work without a problem too. One helper function is specified in `utils.py`.
 
 ## Structure
 
 --------------------------------------------------------------------------------
 
-Three pipelines are provided. _KerasPipeline_ is intended for work with MLP's and CNN's, whereas _KerasFlowPipeline_ and _KerasDirectoryFlowPipeline_ for Convolutional nets due to image augmentation methods incorporated.
+_KerasPipeline_ is a pipeline definition, where most of the run parameters are being set.
 
-All of them enable user to specify run parameters such as _model definition_, _model parameters_, _number of bags/folds_, _validation split size_, _stratification_ in case of KFold. Validation split can be either created as a subset of training set or provided by user.
+All of them enable user to specify run parameters such as _model definition_, _model parameters_, _number of bags/folds_. Validation split can be either created as a subset of training set or provided by user.
 
 _Seed_ can be set to enable easy model stacking or performance comparison.
 
@@ -36,44 +36,24 @@ Statistics of best epochs for each run can be shown with _output_statistics_ and
 
 When running KFold/StratifiedKFold _out-of-fold predictions_ for both train and test sets are returned to allow stacking & blending.
 
-_KerasPipeline_ and _KerasFlowPipeline_ allow to run either **bagged** run or **KFold/StratifiedKFold** run. _KerasDirectoryFlowPipeline_ allows only a **bagged** run as of now. It would be possible to integrate KF into it but that will require a different approach for the data splitting part.
-
-### _KerasPipeline_
-
-Basic pipeline, specify all the parameters, train a model with either bagging or KFold/StratifiedKFold, output model + predictions for validation & test datasets.
-
-### _KerasFlowPipeline_
-
-Similar to _KerasPipeline_ but with real-time data augmentation during model training and test data augmentation during predictions with specified _ImageDataGenerator_ parameters.
-
-### _KerasDirectoryFlowPipeline_
-
-A different pipeline, based on [_.flow_from_directory_](https://keras.io/preprocessing/image/) method which enables **out-of-memory** training, where data is loaded in batches from folders specified in the run parameters. Training & test data augmentation implemented.
-
-Models should be saved into `checkpoints` in working directory during training in order to be loaded afterwards for test data prediction.
-
-A method is provided in the class definition which enables creation of random splits for every bag (with _seed_ parameter either set or not.)
-
-Currently only supports model bagging.
-
 ## Usage
 
 --------------------------------------------------------------------------------
 
 ### Important!
 
-- When using _save_model_ pipeline parameter it is assumed, that there is a folder named `checkpoints` in the _src_dir_ directory.
+- When using _save_model_ parameter it is assumed, that a folder named `checkpoints` is located in the _src_dir_ directory.
 
-- Models are defined in different file, for example: `cnn_models.py` from which they are being loaded and are being given parameters from _model_params_.
+- Models are defined in different file, for example: `cnn_models.py` from which they are being loaded and are being given parameters from _model_params_ if needed.
 
-**Basic _KerasPipeline_ example:**
+**Basic example:**
 
 It consists of two basic steps:
 
 - Create your model/model zoo in different file, e.g. `cnn_models.py` in directory, from which you will be able to load them into your script/notebook
 - Define model & run parameters and run
 
-More detailed examples with full workflow in `examples/` directory.
+**!** More detailed examples with full workflow in `examples/` directory.
 
 #### Step 1 - Define your model
 
@@ -126,54 +106,57 @@ model_parameters = {
 Set your run parameters:
 
 ```python
-bag_parameters = {
-    'model_name': getattr(cnn_models, 'basic_cnn'), # <- this loads basic_cnn model definition from cnn_models.py based on it's function name
-    'model_params': model_parameters,
+pipeline_parameters = {
+    'model_name': getattr(cnn_models, 'basic_cnn'),
     'predict_test': True,
-    'n_bags': 2,
-    'split_size': 0.2,
-    'seed': 1337,
-    'user_split': False,
-    'verbose': True,
+    'model_callbacks': model_callbacks,
     'number_epochs': 1,
-    'batch_size': 256,
-
-    'src_dir': os.getcwd(),
+    'batch_size': 16,
+    'seed': 1337,
+    'shuffle': True,
+    'verbose': True,
 
     'run_save_name': 'basic_cnn_bagging',
+    'load_keras_model': False,
+    'save_model': True,
     'save_history': True,
+    'save_statistics': True,
     'output_statistics': True,
 
-    'X_train': x_train,
-    'y_train': y_train,
-    'X_test': x_test,
+    'src_dir': os.getcwd(),
 }
 ```
 
 Create pipeline definition:
 
 ```python
-bag_pipeline = KerasPipeline(model_name=bag_parameters['model_name'],
-                             model_params=bag_parameters['model_params'],
-                             predict_test=bag_parameters['predict_test'],
-                             n_bags=bag_parameters['n_bags'],
-                             split_size=bag_parameters['split_size'],
-                             number_epochs=bag_parameters['number_epochs'],
-                             batch_size=bag_parameters['batch_size'],
-                             seed=bag_parameters['seed'],
-                             user_split=bag_parameters['user_split'],
-                             run_save_name=bag_parameters['run_save_name'],
-                             save_history=bag_parameters['save_history'],
-                             output_statistics=bag_parameters['output_statistics'])
+bagging_pipeline = KerasPipeline(model_name=pipeline_parameters['model_name'],
+                                 predict_test=pipeline_parameters['predict_test'],
+                                 model_callbacks=pipeline_parameters['model_callbacks'],
+                                 number_epochs=pipeline_parameters['number_epochs'],
+                                 batch_size=pipeline_parameters['batch_size'],
+                                 seed=pipeline_parameters['seed'],
+                                 shuffle=pipeline_parameters['shuffle'],
+                                 verbose=pipeline_parameters['verbose'],
+
+                                 run_save_name=pipeline_parameters['run_save_name'],
+                                 load_keras_model=pipeline_parameters['load_keras_model'],
+                                 save_model=pipeline_parameters['save_model'],
+                                 save_history=pipeline_parameters['save_history'],
+                                 save_statistics=pipeline_parameters['save_statistics'],
+                                 output_statistics=pipeline_parameters['output_statistics'],
+
+                                 src_dir=pipeline_parameters['src_dir'],
+                                 )
 ```
 
 Run your model with current pipeline definition:
 
 ```python
-bagging_model, bagging_preds_valid, bagging_preds_test = bag_pipeline.bag_run(
-    X_train=bag_parameters['X_train'],
-    y_train=bag_parameters['y_train'],
-    X_test=bag_parameters['X_test'])
+bagging_model, bagging_preds_valid, bagging_preds_test = bagging_pipeline.bag_run(
+    X_train=X_train,
+    y_train=y_train,
+    X_test=X_test)
 ```
 
 This will output a trained model, predictions for validation & test set.

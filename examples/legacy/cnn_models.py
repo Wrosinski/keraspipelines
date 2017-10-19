@@ -27,7 +27,7 @@ def basic_cnn(params):
     x = Dense(params['num_classes'])(x)
     output_layer = Activation('softmax')(x)
 
-    model = Model(inputs=input_layer, outputs=output_layer)
+    model = Model(input=input_layer, output=output_layer)
     model.compile(loss='categorical_crossentropy',
                   optimizer='adam', metrics=['accuracy'])
     return model

@@ -1,8 +1,10 @@
 *.DS_Store
 *.pyc
 .directory
-dist/*
+backup/*
 build/*
+dist/*
 temp/*
 examples/checkpoints/*
+examples/dog_breed/checkpoints/*
 Keras_Pipelines.egg-info

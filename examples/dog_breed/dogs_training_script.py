@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from keras.preprocessing.image import ImageDataGenerator
-from keraspipelines import KerasFlowPipeline
+from keraspipelines import KerasPipeline
 from scipy import misc
 from tqdm import tqdm
 
@@ -38,7 +38,8 @@ def load_data(src, df, img_size, labels=None):
         return X
 
 
-src_dir = '../input/'
+# Set directory structure:
+src_dir = '/home/w/Projects/Dog_Breeds/input/'
 src_train = src_dir + 'train/'
 src_test = src_dir + 'test/'
 image_size = (224, 224)
@@ -85,63 +86,67 @@ train_datagen = ImageDataGenerator(
 valid_datagen = ImageDataGenerator(rescale=1. / 255,)
 
 
-flow_kf_parameters = {
+pipeline_parameters = {
     'model_name': getattr(dogs_cnn_models, 'resnet_dense'),
-    'model_params': model_parameters,
     'predict_test': True,
-    'n_folds': 5,
-    'stratify': True,
-    'seed': 1337,
-    'verbose': True,
-    'number_epochs': 50,
+    'model_callbacks': model_callbacks,
+    'number_epochs': 10,
     'batch_size': 16,
-    'callbacks': model_callbacks,
+    'seed': 1337,
+    'shuffle': True,
+    'verbose': True,
+
+    'run_save_name': 'resnet_dense_5fold_SKF_run1',
+    'load_keras_model': False,
+    'save_model': True,
+    'save_history': True,
+    'save_statistics': True,
+    'output_statistics': True,
 
     'src_dir': os.getcwd(),
 
     'train_datagen': train_datagen,
     'valid_datagen': valid_datagen,
     'test_datagen': train_datagen,
-    'number_test_augmentations': 2,
-
-    'run_save_name': 'resnet_dense_5fold_SKF_run1',
-    'save_statistics': True,
-    'save_model': True,
-    'output_statistics': True,
-
-    'X_train': X_train,
-    'y_train': y_train,
-    'X_test': X_test,
+    'number_test_augmentations': 5,
 }
 
 
-flow_kfold_pipeline = KerasFlowPipeline(model_name=flow_kf_parameters['model_name'],
-                                        model_params=flow_kf_parameters['model_params'],
-                                        predict_test=flow_kf_parameters['predict_test'],
-                                        n_folds=flow_kf_parameters['n_folds'],
-                                        stratify=flow_kf_parameters['stratify'],
-                                        seed=flow_kf_parameters['seed'],
-                                        verbose=flow_kf_parameters['verbose'],
-                                        number_epochs=flow_kf_parameters['number_epochs'],
-                                        batch_size=flow_kf_parameters['batch_size'],
-                                        callbacks=flow_kf_parameters['callbacks'],
+pipeline = KerasPipeline(model_name=pipeline_parameters['model_name'],
+                         predict_test=pipeline_parameters['predict_test'],
+                         model_callbacks=pipeline_parameters['model_callbacks'],
+                         number_epochs=pipeline_parameters['number_epochs'],
+                         batch_size=pipeline_parameters['batch_size'],
+                         seed=pipeline_parameters['seed'],
+                         shuffle=pipeline_parameters['shuffle'],
+                         verbose=pipeline_parameters['verbose'],
 
-                                        train_datagen=flow_kf_parameters['train_datagen'],
-                                        valid_datagen=flow_kf_parameters['valid_datagen'],
-                                        test_datagen=flow_kf_parameters['test_datagen'],
-                                        number_test_augmentations=flow_kf_parameters[
-                                            'number_test_augmentations'],
+                         run_save_name=pipeline_parameters['run_save_name'],
+                         load_keras_model=pipeline_parameters['load_keras_model'],
+                         save_model=pipeline_parameters['save_model'],
+                         save_history=pipeline_parameters['save_history'],
+                         save_statistics=pipeline_parameters['save_statistics'],
+                         output_statistics=pipeline_parameters['output_statistics'],
 
-                                        run_save_name=flow_kf_parameters['run_save_name'],
-                                        save_statistics=flow_kf_parameters['save_statistics'],
-                                        save_model=flow_kf_parameters['save_model'],
-                                        output_statistics=flow_kf_parameters['output_statistics'])
+                         src_dir=pipeline_parameters['src_dir'],
+
+                         train_datagen=pipeline_parameters['train_datagen'],
+                         valid_datagen=pipeline_parameters['valid_datagen'],
+                         test_datagen=pipeline_parameters['test_datagen'],
+                         number_test_augmentations=pipeline_parameters['number_test_augmentations'],
+                         )
 
 
-kf_model, oof_train, oof_test = flow_kfold_pipeline.kf_flow_run(
-    X_train=flow_kf_parameters['X_train'],
-    y_train=flow_kf_parameters['y_train'],
-    X_test=flow_kf_parameters['X_test'])
+kf_model, oof_train, oof_test = pipeline.kfold_run(
+    X_train=X_train,
+    y_train=y_train,
+    X_test=X_test,
+    model_params=model_parameters,
+    n_folds=5,
+    stratify=True,
+    index_number=1,
+    flow_augment=True
+)
 
 
 pd.to_pickle(oof_train, 'OOF_train_resnet_dense_5fold_SKF_run1.pkl')
