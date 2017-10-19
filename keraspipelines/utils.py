@@ -15,3 +15,10 @@ def copytree(src, dst, symlinks=False, ignore=None):
             if not os.path.exists(d) or os.stat(s).st_mtime - os.stat(d).st_mtime > 1:
                 shutil.copy2(s, d)
     return
+
+
+def save_parameter_dict(filename, dictionary):
+    with open(filename, 'w') as f:
+        for key, value in dictionary.items():
+            f.write('%s : %s\n' % (key, value))
+    return

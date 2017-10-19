@@ -7,29 +7,31 @@ from keras.callbacks import EarlyStopping
 from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import to_categorical
-from keraspipelines import KerasPipeline
+from keraspipelines import KerasPipeline, save_parameter_dict
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 # Parameters specifying run type:
-run_bagging = False
+run_bagging = True
 run_kfold = False
 flow_augmentation = False  # whether to use real-time data augmentation
 
 # whether to run directory_bag_flow_run using .flow_from_directory method
-from_directory = True
+from_directory = False
 
 
 number_classes = 10
-use_trained_model = True  # whether to load already trained model and predict with it
-index_number = 2  # from which bag/fold training or prediction should be started
+use_trained_model = False  # whether to load already trained model and predict with it
+index_number = 1  # from which bag/fold training or prediction should be started
 n_runs = 2  # numer of runs - bags/folds to train/predict for
 
 # name, under which checkpoints and logs will be saved
 current_run_name = 'check_run1'
 
+# whether pipeline parameters should be saved as a file for easy check:
+save_pipeline_params = True
 
 # Following are needed just for directory_bag_flow_run:
 
@@ -125,6 +127,10 @@ pipeline_parameters = {
     'number_validation_samples': nb_validation_samples,
     'number_test_samples': nb_test_samples,
 }
+
+if save_pipeline_params:
+    save_parameter_dict('{}_pipeline_parameters.txt'.format(pipeline_parameters['run_save_name']),
+                        pipeline_parameters)
 
 
 pipeline = KerasPipeline(model_name=pipeline_parameters['model_name'],

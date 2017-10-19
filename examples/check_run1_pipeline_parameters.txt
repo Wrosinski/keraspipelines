@@ -1,0 +1,28 @@
+model_name : <function basic_cnn at 0x7f84fc64f7b8>
+predict_test : True
+model_callbacks : [<keras.callbacks.EarlyStopping object at 0x7f848cbe3828>]
+number_epochs : 1
+batch_size : 16
+seed : 1337
+shuffle : True
+verbose : True
+run_save_name : check_run1
+load_keras_model : False
+save_model : True
+save_history : True
+save_statistics : True
+output_statistics : True
+src_dir : /home/w/Projects/Keras_Pipelines/github/keraspipelines/examples
+full_train_dir : /home/w/Projects/Keras_Pipelines/input/ncfm/train/
+train_dir : /home/w/Projects/Keras_Pipelines/input/ncfm/train_split/
+valid_dir : /home/w/Projects/Keras_Pipelines/input/ncfm/val_split/
+test_dir : /home/w/Projects/Keras_Pipelines/input/ncfm/test_stg1/
+train_datagen : <keras.preprocessing.image.ImageDataGenerator object at 0x7f848cbe3668>
+valid_datagen : <keras.preprocessing.image.ImageDataGenerator object at 0x7f848cbe3940>
+test_datagen : <keras.preprocessing.image.ImageDataGenerator object at 0x7f848cbe3668>
+number_test_augmentations : 5
+image_size : (32, 32)
+classes : ['OTHER', 'BET', 'ALB', 'LAG', 'SHARK', 'NoF', 'YFT', 'DOL']
+number_train_samples : 3021
+number_validation_samples : 756
+number_test_samples : 1000
