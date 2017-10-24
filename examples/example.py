@@ -14,12 +14,14 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 # Parameters specifying run type:
-run_bagging = True
+run_bagging = False
 run_kfold = False
-flow_augmentation = False  # whether to use real-time data augmentation
+flow_augmentation = True  # whether to use real-time data augmentation
 
 # whether to run directory_bag_flow_run using .flow_from_directory method
 from_directory = False
+# whether to run on full training, without validation set
+full_training = True
 
 
 number_classes = 10
@@ -28,7 +30,7 @@ index_number = 1  # from which bag/fold training or prediction should be started
 n_runs = 2  # numer of runs - bags/folds to train/predict for
 
 # name, under which checkpoints and logs will be saved
-current_run_name = 'check_run1'
+current_run_name = 'full_check_run1'
 
 # whether pipeline parameters should be saved as a file for easy check:
 save_pipeline_params = True
@@ -195,7 +197,8 @@ if run_kfold:
                            n_folds=n_runs,
                            stratify=True,
                            index_number=index_number,
-                           flow_augment=True)
+                           flow_augment=True,
+                           save_oof=True)
     else:
         pipeline.kfold_run(x_train, y_train,
                            X_test=x_test,
@@ -203,7 +206,9 @@ if run_kfold:
                            n_folds=n_runs,
                            stratify=True,
                            index_number=index_number,
-                           flow_augment=False)
+                           flow_augment=False,
+                           save_oof=True)
+
 
 if from_directory:
     pipeline.directory_bag_flow_run(
@@ -213,3 +218,12 @@ if from_directory:
         split_every_bag=True,
         index_number=index_number,
     )
+
+
+if full_training:
+    pipeline.full_train_run(x_train, y_train,
+                            X_test=x_test,
+                            model_params=model_parameters,
+                            n_bags=n_runs,
+                            index_number=index_number,
+                            flow_augment=True)

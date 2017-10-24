@@ -1,4 +1,8 @@
-# Keras Pipelines - 0.1.1
+# Keras Pipelines - 0.1.2
+
+Information about release in Release pages.
+
+Added full training run functionality & automatic OOF predictions saving.
 
 ## Idea
 

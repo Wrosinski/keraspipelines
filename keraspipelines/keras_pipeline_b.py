@@ -281,83 +281,6 @@ class KerasPipeline(object):
             return model, np.array(self.predictions_valid), np.array(self.predictions_test)
         return model, np.array(self.predictions_valid)
 
-    def full_train_run(self,
-                       X_train, y_train,
-                       X_test=None, y_test=None,
-                       model_params=None,
-                       n_bags=2,
-                       index_number=None,
-                       flow_augment=False,
-                       ):
-        """Full training run, without validation set.
-
-        # Arguments
-            X_train: (numpy array), training set.
-            y_train: (numpy array), training set labels.
-            X_test: (numpy array), test set.
-            y_test: (numpy array), test set labels.
-            model_params: (Dict), dictionary of model parameters.
-            n_bags: (Int), number of bags used in training.
-            split_size: (Float), size of validation split in percentage of training set size.
-            user_split: (Boolean), whether validation set is provided by user, not created.
-            index_number: (Int), index specifying from which bag should training or prediction be started.
-            flow_augment: (Boolean), whether to use data augmentation during test and prediction.
-
-        # Returns
-            model: (Keras model), trained model for last bag.
-            predictions_valid: (numpy array), array for validation set predictions.
-            if predict_test additionally:
-                predictions_test: (numpy array), array for test set predictions.
-        """
-
-        if index_number is not None:
-            self.i = index_number
-
-        for bag in range(n_bags):
-            print('Full training run, current bag:', self.i, '\n')
-            model = self.model_name(model_params)
-
-            if self.save_statistics:
-                os.makedirs('{}{}'.format(
-                    self.checkpoints_dst, self.run_save_name), exist_ok=True)
-
-            if self.save_model:
-                self.callbacks_append_checkpoint(
-                    'fulltrain', full_training=True)
-            if self.save_history:
-                self.callbacks_append_logger('fulltrain')
-
-            if self.load_keras_model:
-                model = self.load_trained_model('fulltrain')
-            else:
-                if flow_augment:
-                    print('Training with data augmentation.')
-                    history = model.fit_generator(
-                        self.train_datagen.flow(
-                            X_train, y_train, batch_size=self.batch_size),
-                        steps_per_epoch=X_train.shape[0] / self.batch_size,
-                        epochs=self.number_epochs,
-                        callbacks=self.model_callbacks)
-                else:
-                    history = model.fit(X_train, y_train, verbose=self.verbose,
-                                        batch_size=self.batch_size, epochs=self.number_epochs,
-                                        callbacks=self.model_callbacks)
-
-            if self.predict_test and X_test is not None:
-                print('Predicting on test data.')
-                if flow_augment:
-                    self.predictions_test.append(
-                        self.flow_predict_test_augment(X_test, model))
-                else:
-                    self.predictions_test.append(model.predict(
-                        X_test, batch_size=self.batch_size))
-
-            self.i += 1
-
-        if self.predict_test and X_test is not None:
-            return model, np.array(self.predictions_test)
-        return model
-
     def kfold_run(self,
                   X_train, y_train,
                   X_test=None, y_test=None,
@@ -366,7 +289,6 @@ class KerasPipeline(object):
                   stratify=False,
                   index_number=None,
                   flow_augment=False,
-                  save_oof=False,
                   ):
         """KFold/StratifiedKFold run.
 
@@ -380,8 +302,6 @@ class KerasPipeline(object):
             stratify: (Boolean), whether fold split should be stratified according to labels distribution.
             index_number: (Int), index specifying from which bag should training or prediction be started.
             flow_augment: (Boolean), whether to use data augmentation during test and prediction.
-            save_oof: (Boolean), whether to automatically save oof predictions.
-                Assumes oof/train and oof/test folders in source directory.
 
         # Returns
             model: (Keras model), trained model for last fold.
@@ -485,12 +405,6 @@ class KerasPipeline(object):
             if not self.load_keras_model:
                 if self.output_statistics:
                     self.output_run_statistics('fold')
-
-        if self.predict_test and save_oof:
-            pd.to_pickle(np.array(self.oof_train), 'oof/train/{}_{:.5f}.pkl'.format(
-                self.run_save_name, np.array(self.min_losses).mean(axis=0)))
-            pd.to_pickle(np.array(self.oof_test), 'oof/test/{}_{:.5f}.pkl'.format(
-                self.run_save_name, np.array(self.min_losses).mean(axis=0)))
 
         if self.predict_test and X_test is not None:
             return model, np.array(self.oof_train), np.array(self.oof_test)
@@ -749,7 +663,7 @@ class KerasPipeline(object):
                                                           self.i))
         return model
 
-    def callbacks_append_checkpoint(self, prefix, full_training=False):
+    def callbacks_append_checkpoint(self, prefix):
         """Appends checkpoint saving to model callbacks.
 
         # Arguments
@@ -759,22 +673,13 @@ class KerasPipeline(object):
         print('Saving model from current bag/fold: {}, {} number {} \n'.format(
             self.run_save_name, prefix, self.i))
 
-        if full_training:
-            self.model_callbacks.append(ModelCheckpoint('{0}{1}/{1}_{2}_{3}.h5'.format(
-                self.checkpoints_dst,
-                self.run_save_name,
-                prefix,
-                self.i),
-                monitor='loss',
-                verbose=0, save_best_only=True))
-        else:
-            self.model_callbacks.append(ModelCheckpoint('{0}{1}/{1}_{2}_{3}.h5'.format(
-                self.checkpoints_dst,
-                self.run_save_name,
-                prefix,
-                self.i),
-                monitor='val_loss',
-                verbose=0, save_best_only=True))
+        self.model_callbacks.append(ModelCheckpoint('{0}{1}/{1}_{2}_{3}.h5'.format(
+            self.checkpoints_dst,
+            self.run_save_name,
+            prefix,
+            self.i),
+            monitor='val_loss',
+            verbose=0, save_best_only=True))
         return
 
     def callbacks_append_logger(self, prefix):

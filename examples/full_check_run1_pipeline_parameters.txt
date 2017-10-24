@@ -1,12 +1,12 @@
-model_name : <function basic_cnn at 0x7f5e260267b8>
+model_name : <function basic_cnn at 0x7f773ae287b8>
 predict_test : True
-model_callbacks : [<keras.callbacks.EarlyStopping object at 0x7f5db6569780>]
+model_callbacks : [<keras.callbacks.EarlyStopping object at 0x7f76cb38b320>]
 number_epochs : 1
 batch_size : 16
 seed : 1337
 shuffle : True
 verbose : True
-run_save_name : check_run1
+run_save_name : full_check_run1
 load_keras_model : False
 save_model : True
 save_history : True
@@ -17,9 +17,9 @@ full_train_dir : /home/w/Projects/Keras_Pipelines/input/ncfm/train/
 train_dir : /home/w/Projects/Keras_Pipelines/input/ncfm/train_split/
 valid_dir : /home/w/Projects/Keras_Pipelines/input/ncfm/val_split/
 test_dir : /home/w/Projects/Keras_Pipelines/input/ncfm/test_stg1/
-train_datagen : <keras.preprocessing.image.ImageDataGenerator object at 0x7f5db6573438>
-valid_datagen : <keras.preprocessing.image.ImageDataGenerator object at 0x7f5db6573320>
-test_datagen : <keras.preprocessing.image.ImageDataGenerator object at 0x7f5db6573438>
+train_datagen : <keras.preprocessing.image.ImageDataGenerator object at 0x7f76cb38b2e8>
+valid_datagen : <keras.preprocessing.image.ImageDataGenerator object at 0x7f76cb38b4a8>
+test_datagen : <keras.preprocessing.image.ImageDataGenerator object at 0x7f76cb38b2e8>
 number_test_augmentations : 5
 image_size : (32, 32)
 classes : ['OTHER', 'BET', 'ALB', 'LAG', 'SHARK', 'NoF', 'YFT', 'DOL']

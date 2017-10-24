@@ -6,5 +6,7 @@ build/*
 dist/*
 temp/*
 examples/checkpoints/*
+examples/oof/test/*
+examples/oof/train/*
 examples/dog_breed/checkpoints/*
 Keras_Pipelines.egg-info

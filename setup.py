@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(name='Keras Pipelines',
-      version='0.1.1',
+      version='0.1.2',
       description='Pipelines for Keras',
       author='Wojciech Rosinski',
       author_email='wojtusior@gmail.com',
